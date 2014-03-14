@@ -205,7 +205,7 @@ set smartindent             " use smart indent if there is no indent file
 set nowrap                  " don't wrap text
 
 if exists("&colorcolumn")
-  set colorcolumn=79
+  set colorcolumn=80
 endif
 
 
