@@ -1,0 +1,77 @@
+# ----------------------------------------------------------------------
+# file:    ~/.config/newsbeuter/config
+# vim: set ai et fenc=utf-8 ft=conf nu si sts=0 sw=4 ts=8 tw=0 :
+# ----------------------------------------------------------------------
+
+notify-always        yes
+notify-program       notify-send
+notify-xterm         yes
+notify-screen        yes
+notify-format        "newsbeuter: %n unread articles within %f unread feeds"
+download-path        "~/Downloads/podcasts"
+refresh-on-startup   yes
+feed-sort-order      title-dec
+max-downloads        4
+auto-reload          yes
+reload-time          20
+reload-threads       2
+show-read-feeds      no
+cleanup-on-quit      yes
+browser              nbpix
+player               mpv
+
+
+# binds ----------------------------------------------------------------
+
+unbind-key           t
+unbind-key           R
+bind-key             \          reload-all
+bind-key             "RIGHT"    select-tag
+bind-key             "SPACE"    open
+
+# vim-like navigation
+unbind-key           ^B
+unbind-key           ^F
+unbind-key           l
+bind-key             ^B         pageup
+bind-key             ^F         pagedown
+bind-key             k          up
+bind-key             j          down
+bind-key             h          quit
+bind-key             l          open
+bind-key             L          toggle-show-read-feeds
+
+
+# macro --------------------------------------------------------------
+
+#macro i set browser "feh %u"; open ; set browser "w3m %u"
+
+
+# hide articles matching: ---------------------------------------------
+
+ignore-article  "*" "title =~ \"Sponsor\""
+ignore-article  "*" "title =~ \"Advertisement\""
+ignore-mode     "display"
+
+
+# formatting and colorization ------------------------------------------
+
+datetime-format       "%b %d %R"
+articlelist-format    "%4i %f %D  %?T?|%-17T| ?%t"
+
+highlight feedlist    "^  *[0-9]+  *N  "                    color156 default
+highlight articlelist "^  *[0-9]+  *N  "                    color156 default
+
+highlight article     "(^Feed:.*|^Title:.*|^Author:.*)"     color75  default
+highlight article     "(^Link:.*|^Date:.*)"                 color75  default
+highlight article     "^Podcast Download URL:.*"            color71  default
+highlight article     "^Links:"                             white    color240 underline
+highlight article     "\\[[0-9][0-9]*\\]"                   color72  default  bold
+highlight article     "\\[image [0-9][0-9]*\\]"             color72  default  bold
+highlight article     "\\[embedded flash: [0-9][0-9]*\\]"   color72  default  bold
+highlight article     ":.*\\(link\\)$"                      color74  default
+highlight article     ":.*\\(image\\)$"                     color74  default
+highlight article     ":.*\\(embedded flash\\)$"            color74  default
+
+# my colors
+include "~/.config/newsbeuter/colors"

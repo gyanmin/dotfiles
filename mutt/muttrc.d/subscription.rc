@@ -1,0 +1,8 @@
+# -*- muttrc -*-
+#
+# List of mailing lists i'm subscribed to.
+#
+
+subscribe mutt-user
+subscribe gstreamer-devel-request
+subscribe getmail-subscribe
