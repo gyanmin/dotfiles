@@ -1,0 +1,22 @@
+! terminal color
+!#include ".config/xresources/colors/tango"
+#include ".config/xresources/colors/solarized"
+
+! urxvt-----------------------------------------------------------------------
+#include ".config/xresources/urxvt/default"
+
+! XTerm ----------------------------------------------------------------------
+#include ".config/xresources/xterm/default"
+
+! xpdf -----------------------------------------------------------------------
+/* #include ".config/xresources/xpdf/default" */
+
+! xcalc-----------------------------------------------------------------------
+#include ".config/xresources/xcalc/default"
+
+! xautolock ------------------------------------------------------------------
+#include ".config/xresources/xautolock/default"
+
+!-----------------------------------------------------------------------------
+! Xfontsel - Setting
+#include ".config/xresources/xfontsel/default"

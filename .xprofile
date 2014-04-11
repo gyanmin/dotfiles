@@ -1,0 +1,26 @@
+# ~/.xprofile: executed at the beginning of the X user session,
+# before the Window Manager is started.
+
+#export LANG=zh_CN.UTF-8
+#export LC_CTYPE=zh_CN.UTF-8
+export LANG=zh_TW.UTF-8
+
+export XMODIFIERS=@im=fcitx
+export GTK_IM_MODULE=fcitx # or xim
+export QT_IM_MODULE=fcitx # or xim
+
+xset +fp /usr/share/fonts/local/ >/dev/null 2>&1
+xset +fp /usr/share/fonts/wenquanyi/ >/dev/null 2>&1
+xset +fp /usr/share/fonts/wenquanyi/wqy-zenhei/ > /dev/null 2>&1
+xset +fp /usr/share/fonts/wenquanyi/wqy-microhei/ > /dev/null 2>&1
+xset fp rehash >/dev/null 2>&1
+xsetroot -cursor_name left_ptr
+sh ~/.fehbg
+# xautolock &
+
+# export BSPWM_TREE=/tmp/bspwm.tree
+# export BSPWM_HISTORY=/tmp/bspwm.history
+# export BSPWM_STACK=/tmp/bspwm.stack
+export PANEL_FIFO=/tmp/panel-fifo
+export PANEL_HEIGHT=18
+# vim: ft=sh:et:sw=4:ts=4:sts=0:tw=0
