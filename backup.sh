@@ -1,13 +1,13 @@
 #!/bin/sh
 
-cp ~/.bash_profile .
-cp ~/.profile .
-cp ~/.bashrc .
+BACKDIR=`pwd`
+files="${HOME}/.xinitrc ${HOME}/.Xresources ${HOME}/.profile ${HOME}/.xprofile"
+files="$files ${HOME}/.bash_profile ${HOME}/.bashrc ${HOME}/.bash_login ${HOME}/.bash_logout"
+files="$files ${HOME}/.zshenv ${HOME}/.zprofile ${HOME}/.zshrc"
+files="$files ${HOME}/.vimrc ${HOME}/.vim/vimrc"
+files="$files ${XDG_CONFIG_HOME}/bspwm/bspwmrc"
 
-cp ~/.xinitrc .
-cp ~/.xprofile .
-cp ~/.Xresources .
-cp -Rf ~/.vimrc .
-
-cp -Rf ~/.config/bspwm/ .config/
-cp -Rf ~/.config/mutt/ .config/
+for f in $files ; do
+    [ -f $f ] && rsync -a ${f} ${BACKDIR}
+done
+unset f

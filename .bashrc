@@ -3,26 +3,15 @@
 # if not running interactively, don't do anythin
 [[ $- != *i* ]] && return
 
-# Bash won't get SIGWINCH if another process is in the foreground.
-# Enable checkwinsize so that bash will check the terminal size when
-# it regains control.
-# http://cnswww.cns.cwru.edu/~chet/bash/FAQ (E11)
 shopt -s checkwinsize
-
-# append to the history file, don't overwrite it
 shopt -s histappend
-
-# don't put duplicate lines in the history. See bash(1) for more options
-# don't overwrite GNU Midnight Commander's setting of `ignorespace'.
-#export HISTCONTROL=$HISTCONTROL${HISTCONTROL+,}ignoredups
-# ... or force ignoredups and ignorespace
-export HISTCONTROL=ignoreboth
-
 export HISTFILE=~/.cache/bash/bash_history
-# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+export HISTSIZE=2000
+export HISTFILESIZE=2000
+export HISTCONTROL=ignoreboth
+#export HISTIGNORE="cd *:ls:ls *:history*:cat *:clear"
 
-# make less more friendly for non-text input files, see lesspipe(1)
-#[ -x /usr/bin/lesspipe.sh ] && eval "$(SHELL=/bin/sh lesspipe.sh)"
+export EDITOR=vim
 
 # Set colorful PS1 only on colorful terminals.
 # dircolors --print-database uses its own built-in database
@@ -36,8 +25,7 @@ match_lhs=""
 
 [[ -f /etc/dircolors ]] && match_lhs="${match_lhs}$(</etc/dircolors)"
 [[ -f ~/.dircolors ]] && match_lhs="${match_lhs}$(<~/.dircolors)"
-[[ -z ${match_lhs} ]] \
-  && type -P dircolors >/dev/null \
+[[ -z ${match_lhs} ]] && type -P dircolors >/dev/null \
   && match_lhs=$(dircolors --print-database)
 
 if [[ $'\n'${match_lhs} == *$'\n'"TERM "${safe_term}* ]] ; then
@@ -47,11 +35,6 @@ else
   color_prompt=
 fi
 unset safe_term match_lhs
-
-# set a fancy prompt (non-color, unless we know we "want" color)
-# case "$TERM" in
-#   xterm*|rxvt*|Eterm|aterm|gnome*) color_prompt=yes;;
-# esac
 
 # uncomment for a colored prompt, if the terminal has the capability; turned
 # off by default to not distract the user: the focus in a terminal window
@@ -70,85 +53,48 @@ unset force_color_prompt
 #NORMAL="\[\e[0m\]"
 #RED="\[\e[1;31m\]"
 #GREEN="\[\e[1;32m\]"
-if [ "$color_prompt" = yes ]; then
-  #PS1='\[\e[0;32m\]\u\[\e[m\] \[\e[1;34m\]\w\[\e[m\] \[\e[1;32m\]\$ \[\e[m\] '
+if [ "$color_prompt" = "yes" ]; then
   PS1='\[\e[0;32m\]\w\[\e[0m\] \[\e[1;32m\]\$\[\e[0m\] '
 else
   PS1='\u@\h \w \$([[ \$? != 0 ]] && echo \":( \")\$ '
 fi
 unset color_prompt
 
-PS2="> "
-PS3="> "
-PS4="+ "
+# PS2="> "
+# PS3="> "
+# PS4="+ "
 
-if [[ -n $DISPLAY && -x /usr/bin/dircolors && -r $HOME/.dir_colors ]] ; then
-  eval $(dircolors -b $HOME/.dir_colors)
+if [[ -n $DISPLAY && -x /usr/bin/dircolors && -r $HOME/.dircolors.256 ]] ; then
+  eval $(dircolors -b $HOME/.dircolors.256)
 fi
 
-# Put all your additions into a separate file like
-# ~/.aliases, instead of adding them here directly.
+# ~/.aliases
 [[ -r ~/.aliases ]] && . ~/.aliases
 
-# Functions to help us manage paths. Second argument is the name of the
-# path variable to be modified (default: PATH)
-pathremove () {
-  local IFS=':'
-  local NEWPATH
-  local DIR
-  local PATHVARIABLE=${2:-PATH}
-  for DIR in ${!PATHVARIABLE} ; do
-    if [ "$DIR" != "$1" ] ; then
-      NEWPATH=${NEWPATH:+$NEWPATH:}$DIR
-    fi
-  done
-  export $PATHVARIABLE="$NEWPATH"
-}
+# gitprompt configuration
+# Set config variables first
+# GIT_PROMPT_ONLY_IN_REPO=1
 
-pathprepend () {
-  pathremove $1 $2
-  local PATHVARIABLE=${2:-PATH}
-  export $PATHVARIABLE="$1${!PATHVARIABLE:+:${!PATHVARIABLE}}"
-}
-
-pathappend () {
-  pathremove $1 $2
-  local PATHVARIABLE=${2:-PATH}
-  export $PATHVARIABLE="${!PATHVARIABLE:+${!PATHVARIABLE}:}$1"
-}
-
-# XTerm transpancy
-[ -n "$XTERM_VERSION" ] && transset-df -a >/dev/null
-
-## env variable set
-$(type -P vim >/dev/null) && export EDITOR=vim
-
-#export CLASSPATH=${CLASSPATH:-.:$JAVA_HOME/lib/tools.jar:$JAVA_HOME/lib/dt.jar}
-
-#ANDROID_SDK=${ANDROID_SDK:-/opt/android-sdk-linux_x86}
-#if [ -d $ANDROID_SDK ]; then
-#$(type -P android >/dev/null) || pathappend $ANDROID_SDK/tools
-#$(type -P adb >/dev/null) || pathappend $ANDROID_SDK/platform-tools
-#fi
-#unset ANDROID_SDK
+# as last entry source the gitprompt script
+# source ~/.bash-git-prompt/gitprompt.sh
 
 if [ -f "$HOME/.pythonrc.py" ]; then
-  # export PYTHONSTARTUP=$HOME/.pythonrc.py
   export PYTHONSTARTUP=~/.config/python/python-startup.py
 fi
 
-#if [ -f "/usr/local/share/lua/5.1/rlcompleter.lua" ]; then
-#    export LUA_INIT=@/usr/local/share/lua/5.1/rlcompleter.lua
-#fi
-
 # Setup rbenv
 rbenv_BIN=$HOME/.rbenv/bin
-pathprepend $rbenv_BIN
+[[ -d $rbenv_BIN ]] && export PATH=$rbenv_BIN:$PATH
 eval "$(rbenv init -)"
 unset rbenv_BIN
 
 # Setup nvm
-[[ -s $HOME/.nvm/nvm.sh ]] && . $HOME/.nvm/nvm.sh # This loads NVM
+# [[ -s $HOME/.nvm/nvm.sh ]] && . $HOME/.nvm/nvm.sh # This loads NVM
 
-# Now clean up
-unset pathremove pathprepend pathappend
+# [[ -d ~/.scripts ]] && export PATH=~/.scripts:$PATH
+
+# XTerm transpancy
+# [[ -n "$XTERM_VERSION" ]] && transset-df -a >/dev/null
+
+[[ -r /usr/share/doc/pkgfile/commdnd-not-found.bash ]] && source /usr/share/doc/pkgfile/command-not-found.bash
+# [[ -z $TMUX ]] && tmux

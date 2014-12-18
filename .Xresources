@@ -1,6 +1,8 @@
+! fonts-----------------------------------------------------------------------
+#include ".config/xresources/fonts/default"
+
 ! terminal color
-!#include ".config/xresources/colors/tango"
-#include ".config/xresources/colors/solarized"
+#include ".config/xresources/colors/default"
 
 ! urxvt-----------------------------------------------------------------------
 #include ".config/xresources/urxvt/default"
